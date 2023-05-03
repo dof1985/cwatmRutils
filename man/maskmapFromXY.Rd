@@ -11,7 +11,7 @@ maskmapFromXY(ldd, lat, lon, loud = TRUE)
 
 \item{lat, lon}{latitude and longitude of the outlet in the ldd reference system}
 
-\item{loud}{`logical` if TRUE, the search list (including cell ids) will be printed every iteration}
+\item{loud}{\code{logical} if TRUE, the search list (including cell ids) will be printed every iteration}
 }
 \value{
 a named list

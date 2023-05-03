@@ -24,53 +24,53 @@ raster2ncdf(
 )
 }
 \arguments{
-\item{rast_in}{an input `RasterLayer`, `RasterStack` or a `list` (see Details)}
+\item{rast_in}{an input \code{RasterLayer}, \code{RasterStack} or a \code{list} (see Details)}
 
-\item{path_out}{`character` path for the output file with the extension `.nc` or `.nc4` (if `is_ncdf4 = TRUE`)}
+\item{path_out}{\code{character} path for the output file with the extension \code{.nc} or \code{.nc4} (if \code{is_ncdf4 = TRUE})}
 
-\item{name}{`character` variable name(s)}
+\item{name}{\code{character} variable name(s)}
 
-\item{unit}{`character` variable attributes describing the unit}
+\item{unit}{\code{character} variable attributes describing the unit}
 
-\item{is_ncdf4}{`logical`, if `TRUE` the output is a netCDF 4 file}
+\item{is_ncdf4}{\code{logical}, if \code{TRUE} the output is a netCDF 4 file}
 
-\item{prec}{`character` variable type, either `integer` or `float`}
+\item{prec}{\code{character} variable type, either \code{integer} or \code{float}}
 
 \item{missing_value}{missing value}
 
-\item{time}{`character` representation of a `Date` with format `%Y-%m-%d` or  `numeric` value}
+\item{time}{\code{character} representation of a \code{Date} with format \verb{\%Y-\%m-\%d} or  \code{numeric} value}
 
-\item{origin}{`character` representation of an origin `Date`, used to convert `character` time argument to `numeric`.}
+\item{origin}{\code{character} representation of an origin \code{Date}, used to convert \code{character} time argument to \code{numeric}.}
 
-\item{longname}{`character` variable long name(s)}
+\item{longname}{\code{character} variable long name(s)}
 
-\item{title}{`character` a global attribute}
+\item{title}{\code{character} a global attribute}
 
-\item{author}{`character` a global attribute}
+\item{author}{\code{character} a global attribute}
 
-\item{institute}{`character` a global attribute}
+\item{institute}{\code{character} a global attribute}
 
-\item{source}{`character` a global attribute}
+\item{source}{\code{character} a global attribute}
 
-\item{description}{`character` a global attribute}
+\item{description}{\code{character} a global attribute}
 
-\item{axis_names}{`character` vector naming the axis names. Provides flexibility in cases the third axis is not time.}
+\item{axis_names}{\code{character} vector naming the axis names. Provides flexibility in cases the third axis is not time.}
 }
 \description{
-This function converts a `RasterLayer`, `RasterStack` or a `list` of these classes to a `netCDF` file, and exports it to a pre-defined output path.
+This function converts a \code{RasterLayer}, \code{RasterStack} or a \code{list} of these classes to a \code{netCDF} file, and exports it to a pre-defined output path.
 }
 \details{
-Inputs can represent a single map (`RasterLayer`), a stacked map (e.g., with multiple variables; `RasterStack`),
-a time-series (`list` of maps) or a time-series of stacked maps.
-For each variable, a `name` must be provided, so the length of the `name` argument must be equal to the number of stacked layers in the input.
-In case a time-series is used (e.g., input raster is a `list`), one shall provide a `time` argument, either as a `numeric` vector or as a `character` vector.
-In the latter option, the `character` input will be converted to `numeric` representing the number of days since a user defined `origin`. Both the `time`
-and `origin` arguments should be of format `%Y-%m-%d`.
-For spatio-temporal data, a list of `RasterLayer`/`RasterStack` objects is expected. Each list item stands for a point in time, and
-each `RasterLayer` stands for the spatial dimensions and data of a variable. If multiple variable are required, a `RasterStack` can be used, so
+Inputs can represent a single map (\code{RasterLayer}), a stacked map (e.g., with multiple variables; \code{RasterStack}),
+a time-series (\code{list} of maps) or a time-series of stacked maps.
+For each variable, a \code{name} must be provided, so the length of the \code{name} argument must be equal to the number of stacked layers in the input.
+In case a time-series is used (e.g., input raster is a \code{list}), one shall provide a \code{time} argument, either as a \code{numeric} vector or as a \code{character} vector.
+In the latter option, the \code{character} input will be converted to \code{numeric} representing the number of days since a user defined \code{origin}. Both the \code{time}
+and \code{origin} arguments should be of format \verb{\%Y-\%m-\%d}.
+For spatio-temporal data, a list of \code{RasterLayer}/\code{RasterStack} objects is expected. Each list item stands for a point in time, and
+each \code{RasterLayer} stands for the spatial dimensions and data of a variable. If multiple variable are required, a \code{RasterStack} can be used, so
 each layer stands for a variable.
-The user must provide the following attributes: `name`, `unit`, `prec`, and `missing_value`. Other optional attributes include `longname` (for each variable),
-or the global variables `title`, `author`, `institute`, `source`, and `description`.
+The user must provide the following attributes: \code{name}, \code{unit}, \code{prec}, and \code{missing_value}. Other optional attributes include \code{longname} (for each variable),
+or the global variables \code{title}, \code{author}, \code{institute}, \code{source}, and \code{description}.
 }
 \examples{
 \dontrun{

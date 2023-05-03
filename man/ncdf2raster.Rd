@@ -19,32 +19,32 @@ ncdf2raster(
 )
 }
 \arguments{
-\item{pth}{a path to a NetCDF file with the extension `.nc` or `.nc4`}
+\item{pth}{a path to a NetCDF file with the extension \code{.nc} or \code{.nc4}}
 
-\item{flip}{`character` "x", "y" or NULL. If not set to `NULL`, the resulting array is being flipped to the defined direction.}
+\item{flip}{\code{character} "x", "y" or NULL. If not set to \code{NULL}, the resulting array is being flipped to the defined direction.}
 
-\item{transpose}{`logical` If `TRUE`, the resulting array is being transposed (defaults to `TRUE`).}
+\item{transpose}{\code{logical} If \code{TRUE}, the resulting array is being transposed (defaults to \code{TRUE}).}
 
-\item{time}{If not set to `NULL`, defines temporal subset (see Details).}
+\item{time}{If not set to \code{NULL}, defines temporal subset (see Details).}
 
-\item{origin}{temporal origin of the input NetCDF, defaults to `1901-01-01` (Optional; see Details).}
+\item{origin}{temporal origin of the input NetCDF, defaults to \code{1901-01-01} (Optional; see Details).}
 
-\item{spatial}{If not set to `NULL`, defines spatial subset (see Details).}
+\item{spatial}{If not set to \code{NULL}, defines spatial subset (see Details).}
 
-\item{varName}{If not set to `NULL`, specifies the variable to load.}
+\item{varName}{If not set to \code{NULL}, specifies the variable to load.}
 
 \item{fun}{function for spatial summarize.}
 
-\item{temporal_fun}{`character` One of the following: c("sum", "mean", "sd", "cv")}
+\item{temporal_fun}{\code{character} One of the following: c("sum", "mean", "sd", "cv")}
 
-\item{crs}{proj4 string input to `raster::crs()` used to construct the output `RasterLayer`}
+\item{crs}{proj4 string input to \code{raster::crs()} used to construct the output \code{RasterLayer}}
 
-\item{...}{additional arguments to function provided to the `fun` argument.}
+\item{...}{additional arguments to function provided to the \code{fun} argument.}
 
-\item{attrs}{`logical` if TRUE, variable and global attributes are returned}
+\item{attrs}{\code{logical} if TRUE, variable and global attributes are returned}
 }
 \value{
-a `data.frame`, a `RasterLayer`, a `RasterStack`, or a named `list`
+a \code{data.frame}, a \code{RasterLayer}, a \code{RasterStack}, or a named \code{list}
 }
 \description{
 This function imports netCDF files to R 'RasterLayer','RasterStack', and 'data.frame'.
@@ -53,18 +53,18 @@ This function imports netCDF files to R 'RasterLayer','RasterStack', and 'data.f
 The function can imports 2 or 3-dimensional single/multi-variable NetCDF files into R. It provides users
 with temporal and spatial subset and summary options.
 
-The `spatial` argument  accepts a point coordinate data.frame (x, y) or a `RasterLayer` mask as input. If points are provided, the function
-returns a data.frame with the value for each point, time, and variable. A `RasterLayer` input return the masked map by default. The user
-can use a weight `RasterLayer` as a spatial mask, so the result is the multiplication of the values by the weights.
+The \code{spatial} argument  accepts a point coordinate data.frame (x, y) or a \code{RasterLayer} mask as input. If points are provided, the function
+returns a data.frame with the value for each point, time, and variable. A \code{RasterLayer} input return the masked map by default. The user
+can use a weight \code{RasterLayer} as a spatial mask, so the result is the multiplication of the values by the weights.
 
-The `time` argument accepts one or two (from, to) points in time as a `numeric`/`integer` index or as `Date`. In the former case, the i to j th
-time points are being extracted from the file. When `Date` is provided it is first being converted to days since the defined `origin`, which is
-later searched within the values of the file's time dimension. `origin` should fit units defined in the file's time dimension.
+The \code{time} argument accepts one or two (from, to) points in time as a \code{numeric}/\code{integer} index or as \code{Date}. In the former case, the i to j th
+time points are being extracted from the file. When \code{Date} is provided it is first being converted to days since the defined \code{origin}, which is
+later searched within the values of the file's time dimension. \code{origin} should fit units defined in the file's time dimension.
 
-Summarizing the result can be applied spatially with the `fun` and `...` argument, or temporally with the `temporal_fun` argument.
+Summarizing the result can be applied spatially with the \code{fun} and \code{...} argument, or temporally with the \code{temporal_fun} argument.
 Temporal summary applies pre-defined statistical transformation (e.g., sum, mean, sd, and cv, coefficient of variance) to every grid-cell on the x-y plane across time points,
 thus it converts 3 dimensional array to 2 dimensional.
-Spatial summary applies user defined statistical transformation (e.g., sum, mean, sd) to every time point, resulting in a `data.frame` with the
+Spatial summary applies user defined statistical transformation (e.g., sum, mean, sd) to every time point, resulting in a \code{data.frame} with the
 var, time, and summarized value.
 The user can apply both summaries at the same time.
 }

@@ -9,9 +9,9 @@ ncdfInfo(pth, dim = TRUE, attrs = FALSE)
 \arguments{
 \item{pth}{a path to a NetCDF file with the extension '.nc' or '.nc4'}
 
-\item{dim}{`logical` if TRUE, dimensions the files are returned}
+\item{dim}{\code{logical} if TRUE, dimensions the files are returned}
 
-\item{attrs}{`logical` if TRUE, variable and global attributes are returned}
+\item{attrs}{\code{logical} if TRUE, variable and global attributes are returned}
 }
 \value{
 a named list

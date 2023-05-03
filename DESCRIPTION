@@ -1,16 +1,11 @@
 Package: cwatmRutils
-Type: Package
-Title: Utilities for data manipulation and pre-processing in R to support hydrological modeling with the Community Water Model (CWatM)
-Version: 0.1.0
-Author: Dor Fridman
-Maintainer: Dor Fridman <fridman@iiasa.ac.at>
-Description: 
-The package provides tools to manipulate the Community Water Model (CWatM) input and output data, focusing on: 
-    Reading and writing NetCDF files,
-	Delinating basins,
-	The package is used by the CWatM team for their own needs and will be updated with new tools at time passes by.
-	It also supports a variety of other tools (e.g., visualization), which will be published in the future.
-License: GPL3
+Title: cwatmRutils
+Version: 0.0.0.9000
+Description: Utilities for data manipulation and pre-processing in R to
+    support hydrological modeling with the Community Water Model (CWatM)
+License: GPL (>= 3)
+Authors: Dor Fridman <fridman@iiasa.ac.at>
 Encoding: UTF-8
-LazyData: true
+Language: en
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
