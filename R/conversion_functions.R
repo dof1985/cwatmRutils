@@ -318,9 +318,12 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
       ymn = y[e_y] - 0.5 * resy
       ymx = y[s_y]  + 0.5 * resy
 
-      tmprast <- raster::crop(spatial, raster::extent(xmn, xmx, ymn, ymx))
+      # check dims
+
+      tmprast <- raster::crop(raster::extend(spatial, raster::extent(xmn, xmx, ymn, ymx)),
+                              raster::extent(xmn, xmx, ymn, ymx))
       mask2array <- matrix(raster::getValues(tmprast), byrow = TRUE, nrow = tmprast@nrows, ncol = tmprast@ncols)
-      #mask2array <- as.matrix(raster::crop(spatial, raster::extent(xmn, xmx, ymn, ymx)))
+      mask2array <- as.matrix(raster::crop(spatial, raster::extent(xmn, xmx, ymn, ymx)))
       if(transpose) mask2array <- raster::t(mask2array)
       if(!is.null(time_arrDim) && !temporal_sum) mask2array <- replicate(n = dim(arr)[time_arrDim], expr = mask2array, simplify = "array")
 
