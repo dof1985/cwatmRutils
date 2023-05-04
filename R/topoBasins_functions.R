@@ -44,7 +44,7 @@ flowdir2ldd <- function(flowdir, noflow = 0) {
 #' }
 #' @export
 zoomClip <- function(r, size = 15) {
-  plot(r)
+  raster::plot(r)
   cid <- raster::click(r, n = 1, cell = TRUE, show = FALSE)
   mx <- matrix(1, nrow = 1 + 2 * size, ncol = 1 + 2 * size)
   mx[size, size] <- 0
