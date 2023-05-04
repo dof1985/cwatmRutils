@@ -7,7 +7,7 @@
 maskmapFromXY(ldd, lat, lon, loud = TRUE)
 }
 \arguments{
-\item{ldd}{Input flow direction map (Only PCRaster ldd is accepted)}
+\item{ldd}{Input ldd map}
 
 \item{lat, lon}{latitude and longitude of the outlet in the ldd reference system}
 
