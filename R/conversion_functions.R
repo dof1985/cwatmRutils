@@ -551,7 +551,7 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
 
     if(class(rast_in[[1]]) %in% "RasterLayer") {
       #print("Time-series of simple map to nc")
-      rast_list <- list(rast_in)
+      rast_list <- (rast_in)
     }
 
     if(class(rast_in[[1]]) %in% "RasterStack") {
