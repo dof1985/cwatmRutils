@@ -551,7 +551,7 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
 
     if(class(rast_in[[1]]) %in% "RasterLayer") {
       #print("Time-series of simple map to nc")
-      rast_list <- (rast_in)
+      rast_list <- list(rast_in)
     }
 
     if(class(rast_in[[1]]) %in% "RasterStack") {
@@ -605,7 +605,6 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
   })
 
   ncnew <- ncdf4::nc_create(path_out, var_tmp, force_v4=is_ncdf4)
-
   for(ivar in seq_along(name)) {
     rast_list_var <- rast_list[[ivar]]
 
