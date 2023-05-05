@@ -4,17 +4,19 @@
 \alias{maskmapFromXY}
 \title{Delineate a watershed based on ldd and an outlet point}
 \usage{
-maskmapFromXY(ldd, lat, lon, loud = TRUE)
+maskmapFromXY(ldd, lat, lon, crop = FALSE, loud = TRUE)
 }
 \arguments{
 \item{ldd}{Input ldd map}
 
 \item{lat, lon}{latitude and longitude of the outlet in the ldd reference system}
 
+\item{crop}{if set to 'TRUE' the resulting \code{RasterLayer} is cropped to the extent of the mask}
+
 \item{loud}{\code{logical} if TRUE, the search list (including cell ids) will be printed every iteration}
 }
 \value{
-a named list
+a \code{RasterLayer} of the basin mask
 }
 \description{
 This function create basin mask map based on user inputs of ldd and XY location of the outlet.

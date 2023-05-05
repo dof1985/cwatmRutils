@@ -34,19 +34,37 @@ flowdir2ldd <- function(flowdir, noflow = 0) {
 #'
 #' @param ldd Input ldd map
 #' @param lat,lon latitude and longitude of the outlet in the ldd reference system
+#' @param crop if set to 'TRUE' the resulting `RasterLayer` is cropped to the extent of the mask
 #' @param loud `logical` if TRUE, the search list (including cell ids) will be printed every iteration
-#' @return a named list
+#' @return a `RasterLayer` of the basin mask
 #'
 #' @examples
 #' \dontrun{
 #' PUT EXAMPLE HERE
 #' }
 #' @export
-maskmapFromXY <- function(ldd, lat, lon, loud = TRUE) {
+maskmapFromXY <- function(ldd, lat, lon, crop = FALSE, loud = TRUE) {
 
   getUpstream <- function(x, cell) {
     ngbrs <- raster::adjacent(x, cell, directions = 8, pairs = FALSE)
     # order 7 4 1 9 6 3 8 2
+
+    if(length(ngbrs) < 8) {
+      ngbrs <- unlist(lapply(c(1, 2, 3, 7, 8, 9, 4, 6), function(i) {
+        v <- rep(NA, 9)
+        v[i] <- 1
+
+        mx <- matrix(v, nrow = 3, ncol = 3)
+        mx[2, 2] <- 0
+        tmp <- raster::adjacent(x, cell, directions = mx, pairs = FALSE)
+        if(length(tmp) == 0) {
+          return(NA)
+        } else {
+          return(tmp)
+        }
+
+      }))
+    }
     tmpdf <- data.frame(nvals = x[ngbrs],
                         rvals = c(3, 6, 9, 1, 4, 7, 2, 8))
     return(ngbrs[tmpdf$nvals == tmpdf$rvals])
@@ -58,6 +76,7 @@ maskmapFromXY <- function(ldd, lat, lon, loud = TRUE) {
   while(length(srchList) > 0) {
     if(loud) print(srchList)
     newCells <- getUpstream(x = ldd, cell = srchList[1])
+    newCells <- newCells[!is.na(newCells)]
     srchList <- c(srchList, newCells)
     srchList <- srchList[-1]
 
@@ -67,6 +86,11 @@ maskmapFromXY <- function(ldd, lat, lon, loud = TRUE) {
   rout <- ldd
   rout[] <- 0
   rout[result] <- 1
+
+  if(crop) {
+    maskExtent <- raster::extentFromCells(ldd, result)
+    rout <- raster::crop(rout, maskExtent)
+  }
 
   return(rout)
 }
