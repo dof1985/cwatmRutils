@@ -27,33 +27,6 @@ flowdir2ldd <- function(flowdir, noflow = 0) {
   return(lddout)
 }
 
-#' Point & click to zoom in on a RasterLayer object
-#'
-#' @description
-#' This function zoom in to a RasterLayer using R `base` graphics and the `raster` libraries.
-#' Calling the function plots the raster layer. Zoom in is triggered by a user point and click.
-#' The scope of the output raster is defined by the `size` argument, resulting in a window of area `(2*size + 1)^2`.
-#'
-#' @param r Input flow direction map (Only PCRaster ldd is accepted)
-#' @param size pre-defined distance (grid-cell) for defining a zoom-in window (default = 15)
-#' @return a `RasterLayer` object
-#'
-#' @examples
-#' \dontrun{
-#' PUT EXAMPLE HERE
-#' }
-#' @export
-zoomClip <- function(r, size = 15) {
-  raster::plot(r)
-  cid <- raster::click(r, n = 1, cell = TRUE, show = FALSE)
-  mx <- matrix(1, nrow = 1 + 2 * size, ncol = 1 + 2 * size)
-  mx[size, size] <- 0
-  ngbrs <- raster::adjacent(r, cell = cid$cell, directions = mx,
-                            include = TRUE, pairs = FALSE)
-
-  return(raster::crop(r, raster::extentFromCells(r, cells = ngbrs)))
-}
-
 #' Delineate a watershed based on ldd and an outlet point
 #'
 #' @description
