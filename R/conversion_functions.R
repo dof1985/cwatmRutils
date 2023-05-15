@@ -170,7 +170,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     if(class(time) %in% "Date") {
       ncheck <- length(time)
       time <- which(temp$vals %in% as.numeric(time - as.Date(origin)))
-      stopifnot(length(time) == ncheck, errmsg = 'The temporal coverage could not be fully retrived')
+      stopifnot('The temporal coverage could not be fully retrived' = (length(time) == ncheck))
     }
 
     s_time <- time[1]
