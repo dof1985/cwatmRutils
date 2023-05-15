@@ -91,7 +91,6 @@ ncdfInfo <- function(pth, dim = TRUE, attrs = FALSE) {
 ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin = "1901-01-01", spatial = NULL,
                         varName = NULL, fun = NULL, temporal_fun = NULL, crs = "+init=EPSG:4326", ...) {
 
-
   ## input validation
   if(!is.null(time)) {
     stopifnot("'time' argument should be of class 'Date', 'integer' or 'numeric'" = any(c("integer", "Date", "numeric") %in% class(time)))
@@ -169,10 +168,10 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
     # time inputs asDate
     if(class(time) %in% "Date") {
+      ncheck <- length(time)
       time <- which(temp$vals %in% as.numeric(time - as.Date(origin)))
-
+      stopifnot(length(time) == ncheck, errmsg = 'The temporal coverage could not be fully retrived')
     }
-
 
     s_time <- time[1]
     e_time <- s_time
@@ -256,15 +255,15 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
   from <- c(s_x, s_y)
   counts <- c(c_x, c_y)
+
+
   if(timeExists) {
     from <- c(from, s_time)
     counts <- c(counts, e_time)
   }
-
   out_ds <- setNames(lapply(varid, function(varid) {
+
     arr <- ncdf4::ncvar_get(tmp, varid = varid, start = from, count = counts)
-
-
     arrDims <- dim(arr)
     time_arrDim <- NULL
     if(timeExists) {
@@ -275,7 +274,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
       }
     }
 
-    temporal_sum <- FALSE
+        temporal_sum <- FALSE
     if(!is.null(temporal_fun) && !is.null(time_arrDim) && !isPts) { # ignore points
       n <- dim(arr)[time_arrDim]
       rast_tmp <- stack(lapply(seq_len(n), function(i) {
@@ -372,7 +371,6 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
     iter <- 1
     if(!is.null(time_arrDim) && !temporal_sum) iter <- seq_len(dim(arr)[time_arrDim])
-
     outr <- setNames(lapply(iter, function(l) {
       if(!is.null(time_arrDim)) {
         arr2rast <- as.matrix(getAxis(array = arr, idx = l, axis = time_arrDim))
