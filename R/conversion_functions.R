@@ -24,6 +24,12 @@ ncdfInfo <- function(pth, dim = TRUE, attrs = FALSE) {
   if(dim) {
     dims <- names(tmp$dim)
     info <- c(info, "vars"= list(vars), "dims" = list(dims))
+    #if(getVals) {
+    #  #getVals = TRUE
+    #  for(dim1 in dims) {
+    #    tmpList <- tmp$dim[[dim1]]$vals
+    #  }
+    }
   }
   if(attrs) {
     varattr <- do.call("rbind", lapply(vars, function(v) {
@@ -445,7 +451,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   if((isPts | !is.null(fun)) && length(varid) > 1) out_ds <- do.call("rbind", out_ds)
   if(class(out_ds) %in% "data.frame") row.names(out_ds) <- NULL
   if(class(out_ds) %in% "list") {
-    if(length(varid) > 1 && (length(tempnm) == 1) | is.null(tempnm)) {
+    if(length(varid) > 1 && ((length(tempnm) == 1) | is.null(tempnm))) {
       out_ds <- stack(out_ds)
     } else if(length(varid) > 1) {
       out_ds <- setNames(lapply(tempnm, function(timename) {
