@@ -30,7 +30,7 @@ ncdfInfo <- function(pth, dim = TRUE, attrs = FALSE) {
     #    tmpList <- tmp$dim[[dim1]]$vals
     #  }
     }
-  }
+
   if(attrs) {
     varattr <- do.call("rbind", lapply(vars, function(v) {
       outdf <- as.data.frame(t(as.data.frame(unlist(ncdf4::ncatt_get(tmp, varid = v)))))
