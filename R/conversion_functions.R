@@ -518,7 +518,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 #' }
 #' @export
 raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = "float", missing_value = 32000,
-                        time = NULL, origin = "1901-01-01",
+                        time = NULL, origin = "1901-01-01", time_unit = "days",
                         longname = NULL, title =NULL, author = NULL, institute = NULL,
                         source = NULL, description = NULL, axis_names = c("lon", "lat", "time")) {
 
@@ -597,7 +597,7 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
   # if time included add time dimension
   if(!is.null(time)) {
     nt <- length(time)
-    t_time <- ncdf4::ncdim_def(axis_names[3], units = sprintf("days since %s", origin), calendar =  "standard", vals = 0, unlim = TRUE)
+    t_time <- ncdf4::ncdim_def(axis_names[3], units = sprintf("%s since %s", time_unit, origin), calendar =  "standard", vals = 0, unlim = TRUE)
     dims <- list(x_lon, y_lat, t_time)
   }
 
