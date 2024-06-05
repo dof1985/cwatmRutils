@@ -269,7 +269,15 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   }
   out_ds <- setNames(lapply(varid, function(varid) {
 
-    arr <- ncdf4::ncvar_get(tmp, varid = varid, start = from, count = counts)
+    arr <-  tryCatch({
+      ncdf4::ncvar_get(tmp, varid = varid, start = from, count = counts)
+      }, error =  function(e) {
+        from <- c(s_x, s_y)
+        counts <- c(c_x, c_y)
+        timeExists <- FALSE
+        ncdf4::ncvar_get(tmp, varid = varid, start = from, count = counts)
+             })
+    #arr <- ncdf4::ncvar_get(tmp, varid = varid, start = from, count = counts)
     arrDims <- dim(arr)
     time_arrDim <- NULL
     if(timeExists) {
