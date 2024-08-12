@@ -242,12 +242,21 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     # correct if mask is the same size as input ncdf
     e_x <- s_x + min(mask_count_x, length(tmp$dim$lon$vals) - 1)
 
+    if(e_x > length(x)) {
+      e_x <- e_x - 1
+      s_x <- s_x - 1
+    }
     #(x[e_x] - x[s_x]) / (e_x - s_x)
 
     s_y <- which(min(abs(mask2Extent@ymax - y)) == abs(mask2Extent@ymax - y))
     s_y <- s_y[length(s_y)]
     # correct if mask is the same size as input ncdf
     e_y <- s_y + min(mask_count_y, length(tmp$dim$lat$vals) - 1)
+
+    if(e_y > length(y)) {
+      e_y <- e_y - 1
+      s_y <- s_y - 1
+    }
 
     #(y[e_y] - y[s_y]) / (e_y - s_y)
 
