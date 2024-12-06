@@ -272,9 +272,10 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     if(length(varid) > 1) warning(sprintf("varName is NULL, attempting to extract %s variables: %s;",
                                           length(varid),
                                           paste0(varid, collapse = ", ")))
-  } else
+  } else {
     varid <- varName
   }
+
   from <- c(s_x, s_y)
   counts <- c(c_x, c_y)
 
