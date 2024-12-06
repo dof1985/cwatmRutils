@@ -268,10 +268,11 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
 
   varid <- names(tmp$var)
-  if(!is.null(varName)) {
+  if(is.null(varName)) {
     if(length(varid) > 1) warning(sprintf("varName is NULL, attempting to extract %s variables: %s;",
                                           length(varid),
                                           paste0(varid, collapse = ", ")))
+  } else
     varid <- varName
   }
   from <- c(s_x, s_y)
