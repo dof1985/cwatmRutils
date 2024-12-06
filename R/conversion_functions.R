@@ -148,9 +148,11 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   # open file
   tmp <- ncdf4::nc_open(pth)
 
+  dim_nmes <- c("lat", "lon")
+  if("lat" %in% names(tmp$dim)) dim_nmes <- c("y", "x")
   # get dim x, dim y
-  y <- tmp$dim$lat$vals
-  x <- tmp$dim$lon$vals
+  y <- tmp$dim[[dim_nmes[1]]]$vals
+  x <- tmp$dim[[dim_nmes[2]]]lon$vals
 
   resx <- x[2] - x[1]
   resy <- abs(y[2] - y[1])
@@ -266,8 +268,12 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
 
   varid <- names(tmp$var)
-  if(!is.null(varName)) varid <- varName
-
+  if(!is.null(varName)) {
+    if(length(varid) > 1) warning(sprintf("varName is NULL, attempting to extract %s variables: %s;",
+                                          length(varid),
+                                          paste0(varid, collapse = ", ")))
+    varid <- varName
+  }
   from <- c(s_x, s_y)
   counts <- c(c_x, c_y)
 
