@@ -149,7 +149,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   tmp <- ncdf4::nc_open(pth)
 
   dim_nmes <- c("lat", "lon")
-  if("lat" %in% names(tmp$dim)) dim_nmes <- c("y", "x")
+  if(!"lat" %in% names(tmp$dim)) dim_nmes <- c("y", "x")
   # get dim x, dim y
   y <- tmp$dim[[dim_nmes[1]]]$vals
   x <- tmp$dim[[dim_nmes[2]]]$vals
