@@ -14,6 +14,7 @@ raster2ncdf(
   missing_value = 32000,
   time = NULL,
   origin = "1901-01-01",
+  time_unit = "days",
   longname = NULL,
   title = NULL,
   author = NULL,
