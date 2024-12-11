@@ -79,7 +79,7 @@ getInlets <- function(r, network,ldd) {
                        xmn = r@extent@xmin, xmx = r@extent@xmax,
                        ymn = r@extent@ymin, ymx = r@extent@ymax,
                        crs = r@crs)
-  inlets <- reg
+  inlets <- r
   inlets[] <- 0
   ## get downstream
   inlts_tbl <- do.call("rbind", lapply(c(1:4, 6:9), function(dir) {
@@ -89,7 +89,7 @@ getInlets <- function(r, network,ldd) {
     tmp$cell <- raster::cellFromXY(tmpr, tmp[c("x", "y")])
     tmp$toreg <- unlist(lapply(tmp$cell, function(ic) {
       tocell <- raster::adjacent(tmpr, cell = ic, dir = 8)[ which(c(7, 4, 1, 9, 6, 3, 8, 2) %in% dir), 2]
-      reg[tocell]
+      r[tocell]
     }))
     return(tmp)
   }))
