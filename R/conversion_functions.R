@@ -281,8 +281,16 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
 
   if(timeExists) {
-    from <- c(from, s_time)
-    counts <- c(counts, e_time)
+    # Search position of time in dim names
+
+    if(which(names(nc_$dim) %in% "time") == 1) {
+      from <- c(s_time, from)
+      counts <- c(e_time, counts)
+    } else {
+      from <- c(from, s_time)
+      counts <- c(counts, e_time)
+    }
+
   }
   out_ds <- setNames(lapply(varid, function(varid) {
 
