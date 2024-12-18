@@ -148,8 +148,13 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   # open file
   tmp <- ncdf4::nc_open(pth)
 
-  dim_nmes <- c("lat", "lon")
-  if(!"lat" %in% names(tmp$dim)) dim_nmes <- c("y", "x")
+  dim_nmes <- c(grep("[Ll]atitude|[Ll]at", names(tmp$dim), value = TRUE),
+                grep("[Ll]ongitue|[Ll]on", names(tmp$dim), value = TRUE))
+  if(length(dim_nmes) == 0) {
+    dim_nmes <- c(grep("[Yy]", names(tmp$dim), value = TRUE),
+                  grep("[Xx]", names(tmp$dim), value = TRUE))
+  }
+
   # get dim x, dim y
   y <- tmp$dim[[dim_nmes[1]]]$vals
   x <- tmp$dim[[dim_nmes[2]]]$vals
