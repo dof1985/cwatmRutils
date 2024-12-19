@@ -224,6 +224,8 @@ maskmapFromXY <- function(ldd, lat, lon, crop = FALSE, loud = TRUE) {
     if(loud) print(srchList)
     newCells <- getUpstream(x = ldd, cell = srchList[1])
     newCells <- newCells[!is.na(newCells)]
+    # newCells that are already in result are deleted
+    newCells <- newCells[!newCells %in% result]
     srchList <- c(srchList, newCells)
     srchList <- srchList[-1]
 
