@@ -133,7 +133,7 @@ getInlets <- function(r, network,ldd) {
     tmp <- tmp[!is.na(tmp$layer) & tmp$layer > 0, ]
     tmp$cell <- raster::cellFromXY(tmpr, tmp[c("x", "y")])
     names(tmp)[3] <- "toreg"
-    return(tmp[c("x", "y", "toreg")])
+    return(tmp[c("x", "y", "cell", "toreg")])
   }))
 
   inlets[inlts_tbl$cell] <- inlts_tbl$toreg
