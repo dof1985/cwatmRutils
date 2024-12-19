@@ -34,6 +34,15 @@ getInlets <- function(r, network,ldd) {
   tmp_d <- rbind(c_NA, tmp[-dim_[1], ])
   tmp_u <- rbind(tmp[-1, ], c_NA)
 
+  # for shift rasters
+  tmp_dr <- cbind(r_NA, tmp_d[ , -dim(tmp_d)[2]])
+  tmp_dl <- cbind(tmp_d[ , -1], r_NA)
+
+  tmp_ur <- cbind(r_NA, tmp_u[ , -dim(tmp_u)[2]])
+  tmp_ul <- cbind(tmp_u[ , -1], r_NA)
+
+  #
+
   con1 <- (tmp - tmp_r) !=0
   con2 <- (tmp - tmp_l) !=0
   con3 <- (tmp - tmp_d) !=0
@@ -82,16 +91,49 @@ getInlets <- function(r, network,ldd) {
   inlets <- r
   inlets[] <- 0
   ## get downstream
+  # make shift rasters - naming is opposite to ldd direction, eg. tmp_u -> sr2
+
+  sr1 <- raster::raster(tmp_ur,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr2 <- raster::raster(tmp_u,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr3 <- raster::raster(tmp_ul,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr4 <- raster::raster(tmp_r,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr6 <- raster::raster(tmp_l,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr7 <- raster::raster(tmp_dr,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr8 <- raster::raster(tmp_d,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  sr9 <- raster::raster(tmp_dl,
+                        xmn = r@extent@xmin, xmx = r@extent@xmax,
+                        ymn = r@extent@ymin, ymx = r@extent@ymax,
+                        crs = r@crs)
+  #
   inlts_tbl <- do.call("rbind", lapply(c(1:4, 6:9), function(dir) {
     tmpr <- get(paste0("r", dir))
-    tmp <- raster::as.data.frame(tmpr, xy = TRUE)
-    tmp <- tmp[!is.na(tmp$layer) & tmp$layer == 1, ]
+    tmpsr <- get(paste0("sr", dir))
+    tmp <- raster::as.data.frame(tmpr * tmpsr, xy = TRUE)
+    tmp <- tmp[!is.na(tmp$layer) & tmp$layer > 0, ]
     tmp$cell <- raster::cellFromXY(tmpr, tmp[c("x", "y")])
-    tmp$toreg <- unlist(lapply(tmp$cell, function(ic) {
-      tocell <- raster::adjacent(tmpr, cell = ic, dir = 8)[ which(c(7, 4, 1, 9, 6, 3, 8, 2) %in% dir), 2]
-      r[tocell]
-    }))
-    return(tmp)
+    names(tmp)[3] <- "toreg"
+    return(tmp[c("x", "y", "toreg")])
   }))
 
   inlets[inlts_tbl$cell] <- inlts_tbl$toreg
