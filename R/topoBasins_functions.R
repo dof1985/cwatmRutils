@@ -192,55 +192,86 @@ flowdir2ldd <- function(flowdir, noflow = 0) {
 #' @export
 maskmapFromXY <- function(ldd, lat, lon, crop = FALSE, loud = TRUE) {
 
-  getUpstream <- function(x, cell) {
-    ngbrs <- raster::adjacent(x, cell, directions = 8, pairs = FALSE)
-    # order 7 4 1 9 6 3 8 2
+  # v2 - optimized - run vectors of cells simulatnously.
+  # GET SHIFT MATRICES
+  tmp <- raster::as.matrix(ldd)
+  dim_ <- dim(tmp)
+  r_NA <- matrix(NA, nrow = dim_[1], ncol = 1)
+  c_NA <- matrix(NA, nrow = 1, ncol = dim_[2])
+  tmp_r <- cbind(r_NA, tmp[, -dim_[2]])
+  tmp_l <- cbind(tmp[, -1], r_NA)
+  tmp_d <- rbind(c_NA, tmp[-dim_[1], ])
+  tmp_u <- rbind(tmp[-1, ], c_NA)
+  tmp_dr <- cbind(r_NA, tmp_d[, -dim(tmp_d)[2]])
+  tmp_dl <- cbind(tmp_d[, -1], r_NA)
+  tmp_ur <- cbind(r_NA, tmp_u[, -dim(tmp_u)[2]])
+  tmp_ul <- cbind(tmp_u[, -1], r_NA)
 
-    if(length(ngbrs) < 8) {
-      ngbrs <- unlist(lapply(c(1, 2, 3, 7, 8, 9, 4, 6), function(i) {
-        v <- rep(NA, 9)
-        v[i] <- 1
+  # create shift rasters
 
-        mx <- matrix(v, nrow = 3, ncol = 3)
-        mx[2, 2] <- 0
-        tmp <- raster::adjacent(x, cell, directions = mx, pairs = FALSE)
-        if(length(tmp) == 0) {
-          return(NA)
-        } else {
-          return(tmp)
-        }
+  sr1 <- raster::raster(tmp_dl, xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr2 <- raster::raster(tmp_d,  xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr3 <- raster::raster(tmp_dr,  xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr4 <- raster::raster(tmp_l, xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr6 <- raster::raster(tmp_r,  xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr7 <- raster::raster(tmp_ul,  xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr8 <- raster::raster(tmp_u, xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
+  sr9 <- raster::raster(tmp_ur, xmn = ldd@extent@xmin, xmx = ldd@extent@xmax,
+                        ymn = ldd@extent@ymin, ymx = ldd@extent@ymax, crs = ldd@crs)
 
-      }))
-    }
-    tmpdf <- data.frame(nvals = x[ngbrs],
-                        rvals = c(3, 6, 9, 1, 4, 7, 2, 8))
-    return(ngbrs[tmpdf$nvals == tmpdf$rvals])
+  conds_ <- setNames(lapply(c(1:4, 6:9), function(i) {
+    get(paste0("sr", i)) == i
+  }), nm = paste0("cond", c(1:4, 6:9)))
+
+
+  #cell = srchList[1]
+  getUpstream <- function(srchCells,  x, conds) {
+
+    newcells <- integer(0)
+
+    newcells <- c(newcells, conds$cond1[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) - 1, col = raster::colFromCell(ldd, srchCells) + 1))
+    newcells <- c(newcells, conds$cond2[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) - 1, col = raster::colFromCell(ldd, srchCells)))
+    newcells <- c(newcells, conds$cond3[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) - 1, col = raster::colFromCell(ldd, srchCells) - 1))
+    newcells <- c(newcells, conds$cond4[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells), col = raster::colFromCell(ldd, srchCells) + 1))
+    newcells <- c(newcells, conds$cond6[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells), col = raster::colFromCell(ldd, srchCells) - 1))
+    newcells <- c(newcells, conds$cond7[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) + 1, col = raster::colFromCell(ldd, srchCells) + 1))
+    newcells <- c(newcells, conds$cond8[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) + 1, col = raster::colFromCell(ldd, srchCells)))
+    newcells <- c(newcells, conds$cond9[srchCells] * raster::cellFromRowCol(ldd, row = raster::rowFromCell(ldd, srchCells) + 1, col = raster::colFromCell(ldd, srchCells) - 1))
+
+    newcells <- newcells[newcells != 0]
+
+    return(newcells)
   }
+
 
   result <- srchList <- raster::cellFromXY(ldd, xy = c(lon, lat))
 
 
-  while(length(srchList) > 0) {
-    if(loud) print(srchList)
-    newCells <- getUpstream(x = ldd, cell = srchList[1])
+  while (length(srchList) > 0) {
+    if (loud)
+      print(srchList)
+    newCells <- getUpstream(srchCells = srchList, x = ldd, conds = conds_)
     newCells <- newCells[!is.na(newCells)]
-    # newCells that are already in result are deleted
     newCells <- newCells[!newCells %in% result]
-    srchList <- c(srchList, newCells)
-    srchList <- srchList[-1]
-
+    srchList <- newCells
+    #srchList <- srchList[-1]
     result <- c(result, newCells)
-
   }
   rout <- ldd
   rout[] <- 0
   rout[result] <- 1
-
-  if(crop) {
+  if (crop) {
     maskExtent <- raster::extentFromCells(ldd, result)
     rout <- raster::crop(rout, maskExtent)
   }
-
   return(rout)
+
 }
 
