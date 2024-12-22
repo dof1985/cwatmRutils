@@ -288,7 +288,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   if(timeExists) {
     # Search position of time in dim names
 
-    if(which(names(tmp$dim) %in% "time") == 1) {
+    if(tmp$var[[varid[1]]][[1]]$name == "time") {
       from <- c(s_time, from)
       counts <- c(e_time, counts)
     } else {
