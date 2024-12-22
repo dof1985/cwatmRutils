@@ -311,7 +311,9 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     arrDims <- dim(arr)
     time_arrDim <- NULL
     if(timeExists) {
-      time_arrDim <- which(names(tmp$dim) %in% "time")
+      time_arrDim <- 3
+      if(tmp$var[[varid[1]]]$dim[[1]]$name == "time") time_arrDim <- 1
+      #time_arrDim <- which(names(tmp$dim) %in% "time")
       # if(is.null(time)) {
       #   time_arrDim <- length(arrDims)
       # } else if (length(time) > 1) {
