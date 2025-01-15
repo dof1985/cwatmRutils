@@ -4,7 +4,7 @@
 \alias{getInlets}
 \title{Identify inlets into desalinated spatial units}
 \usage{
-getInlets(r, network, ldd)
+getInlets(r, network, ldd, plot_ = TRUE)
 }
 \arguments{
 \item{r}{a spatial unit \code{RasterLayer} object}
@@ -12,12 +12,14 @@ getInlets(r, network, ldd)
 \item{network}{a stream-network \code{RasterLayer} object}
 
 \item{ldd}{a ldd \code{RasterLayer} object}
+
+\item{plot}{a logical variable. If \code{TRUE}, a plot of the inlet points, spatial units, and river network is plotted \code{RasterLayer} object}
 }
 \value{
-a named \code{list} containing a inlet \code{RasterLayer} and \code{data.frame} objects
+a \code{data.frame} object with the inflow point location, cell ids, and associated from- and to-zones
 }
 \description{
-Utilize the ldd and the stream-network to identify the inlets into a deliniated spatial units, e.g., river basins or administrative units.
+Utilize the ldd and the stream-network to identify the inlets into a delineated spatial units, e.g., river basins or administrative units.
 }
 \examples{
 \dontrun{
