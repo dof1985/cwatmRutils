@@ -28,7 +28,7 @@ getUpstream <- function(x) {
                                               row = raster::rowFromCell(x, cells_) - downdir[downdir$val == dir, "row"],
                                               col = raster::colFromCell(x, cells_) - downdir[downdir$val == dir, "col"])
     df <- data.frame("cells" = cells_,
-                     "upcells" = as.data.frame(upcells)$layer)
+                     "upcells" = raster::as.data.frame(upcells)$layer)
     df <- df[x[df$upcells] == dir, ]
     # upldd[df$cells] <- x[df$upcells]
     # (upldd == 1)[859]
@@ -70,7 +70,7 @@ getInlets <- function (r, network, ldd, plot_ = TRUE) {
   if(plot_) {
     plot(r)
     plot(cwatmRutils::val_to_na(network > 0), col = "black", add =  TRUE)
-    plot(SpatialPoints(ups_[c("to_x", "to_y")]), col = "red", add = TRUE)
+    plot(sp::SpatialPoints(ups_[c("to_x", "to_y")]), col = "red", add = TRUE)
   }
   return(ups_)
 }
