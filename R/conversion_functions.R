@@ -492,6 +492,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
                           "y" = y[y_loc],
                           "var"= varid,
                           "value" = as.numeric(arr),
+                          "time" = tempnm,
                           stringsAsFactors = FALSE)
     }
     if(length(outr) == 1) outr <- outr[[1]]
