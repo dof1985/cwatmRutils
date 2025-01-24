@@ -417,8 +417,12 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
 
 
     iter <- 1
-    if(!is.null(time_arrDim) && !temporal_sum) iter <- seq_len(dim(arr)[time_arrDim])
-    outr <- setNames(lapply(iter, function(l) {
+
+    if(!(isPts && nrow(spatial) == 1)) {
+      if(!is.null(time_arrDim) && !temporal_sum) iter <- seq_len(dim(arr)[time_arrDim])
+
+
+      outr <- setNames(lapply(iter, function(l) {
       if(!is.null(time_arrDim)) {
         arr2rast <- as.matrix(getAxis(array = arr, idx = l, axis = time_arrDim))
         #if(time_arrDim == 2) arr2rast <- raster::t(arr2rast)
@@ -436,6 +440,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
           y_ext <- x_loc - min(x_loc) + 1
           x_ext <- y_loc - min(y_loc) + 1
         }
+
         do.call("rbind", lapply(seq_len(length(x_ext)), function(i) {
           dfpts <- data.frame("x" = x[x_loc[i]],
                               "y" = y[y_loc[i]],
@@ -482,9 +487,15 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
       }
 
     }), nm = tempnm)
-
+    } else {
+      outr <- data.frame("x" = x[x_loc],
+                          "y" = y[y_loc],
+                          "var"= varid,
+                          "value" = as.numeric(arr),
+                          stringsAsFactors = FALSE)
+    }
     if(length(outr) == 1) outr <- outr[[1]]
-    if(isPts && !is.null(time_arrDim)) outr <- do.call("rbind", outr)
+    if(isPts && !is.null(time_arrDim) && nrow(spatial) > 1) outr <- do.call("rbind", outr)
     if(!is.null(fun) && is.null(temporal_fun) && !is.null(time_arrDim)) outr <- do.call("rbind", outr)
     return(outr)
   }), nm = varid)
