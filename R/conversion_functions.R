@@ -297,6 +297,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     }
 
   }
+
   out_ds <- setNames(lapply(varid, function(varid) {
 
     arr <-  tryCatch({
@@ -324,9 +325,14 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
         temporal_sum <- FALSE
     if(!is.null(temporal_fun) && !is.null(time_arrDim) && !isPts) { # ignore points
       n <- dim(arr)[time_arrDim]
-      rast_tmp <- raster::stack(lapply(seq_len(n), function(i) {
-        raster::raster(getAxis(array = arr, idx = i, axis = time_arrDim))
-      }))
+      if(is.na(n) || is.null(n) || n == 1) {
+        rast_tmp <- raster::raster(arr)
+      } else {
+        rast_tmp <- raster::stack(lapply(seq_len(n), function(i) {
+          raster::raster(getAxis(array = arr, idx = i, axis = time_arrDim))
+        }))
+      }
+
       # 'sum', 'mean', 'sd', 'cv'
 
       naMask <- is.na(rast_tmp[[1]])
@@ -419,7 +425,9 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
     iter <- 1
 
     if(!(isPts && nrow(spatial) == 1)) {
-      if(!is.null(time_arrDim) && !temporal_sum) iter <- seq_len(dim(arr)[time_arrDim])
+
+
+      if(!is.na(dim(arr)[time_arrDim]) && !is.null(dim(arr)[time_arrDim]) && !is.null(time_arrDim) && !temporal_sum) iter <- seq_len(dim(arr)[time_arrDim])
 
 
       outr <- setNames(lapply(iter, function(l) {
@@ -504,6 +512,8 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   if((isPts | !is.null(fun)) && length(varid) > 1) out_ds <- do.call("rbind", out_ds)
   if(class(out_ds) %in% "data.frame") row.names(out_ds) <- NULL
   if(class(out_ds) %in% "list") {
+
+    if(!is.null(temporal_fun)) tempnm <- NULL
     if(length(varid) > 1 && ((length(tempnm) == 1) | is.null(tempnm))) {
       out_ds <- raster::stack(out_ds)
     } else {
@@ -512,6 +522,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
         tmp <- raster::stack(lapply(varid, function(varname) {
           out_ds[[varname]][[as.character(timename)]]
         }))
+
         names(tmp) <- varid
         return(tmp)
       }), nm = tempnm)
@@ -697,3 +708,4 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
 
   ncdf4::nc_close(ncnew)
 }
+
