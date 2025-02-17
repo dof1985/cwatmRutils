@@ -324,7 +324,7 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
         temporal_sum <- FALSE
     if(!is.null(temporal_fun) && !is.null(time_arrDim) && !isPts) { # ignore points
       n <- dim(arr)[time_arrDim]
-      rast_tmp <- stack(lapply(seq_len(n), function(i) {
+      rast_tmp <- raster::stack(lapply(seq_len(n), function(i) {
         raster::raster(getAxis(array = arr, idx = i, axis = time_arrDim))
       }))
       # 'sum', 'mean', 'sd', 'cv'
@@ -505,10 +505,10 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   if(class(out_ds) %in% "data.frame") row.names(out_ds) <- NULL
   if(class(out_ds) %in% "list") {
     if(length(varid) > 1 && ((length(tempnm) == 1) | is.null(tempnm))) {
-      out_ds <- stack(out_ds)
+      out_ds <- raster::stack(out_ds)
     } else if(length(varid) > 1) {
       out_ds <- setNames(lapply(tempnm, function(timename) {
-        tmp <- stack(lapply(varid, function(varname) {
+        tmp <- raster::stack(lapply(varid, function(varname) {
           out_ds[[varname]][[as.character(timename)]]
         }))
         names(tmp) <- varid
