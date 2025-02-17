@@ -204,4 +204,3 @@ maskmapFromXY <- function(ldd, lat, lon, crop = FALSE, loud = TRUE) {
   return(rout)
 
 }
-
