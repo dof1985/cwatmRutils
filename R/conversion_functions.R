@@ -506,7 +506,8 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
   if(class(out_ds) %in% "list") {
     if(length(varid) > 1 && ((length(tempnm) == 1) | is.null(tempnm))) {
       out_ds <- raster::stack(out_ds)
-    } else if(length(varid) > 1) {
+    } else {
+      if(length(varid) > 1) {
       out_ds <- setNames(lapply(tempnm, function(timename) {
         tmp <- raster::stack(lapply(varid, function(varname) {
           out_ds[[varname]][[as.character(timename)]]
