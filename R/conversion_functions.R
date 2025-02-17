@@ -515,11 +515,12 @@ ncdf2raster <- function(pth, flip = NULL, transpose = FALSE, time = NULL, origin
         names(tmp) <- varid
         return(tmp)
       }), nm = tempnm)
+      }
     } else if(length(varid) == 1) {
       out_ds <- out_ds[[1]]
     }
-  }
 
+  }
   ncdf4::nc_close(tmp)
   return(out_ds)
 }
