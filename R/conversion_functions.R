@@ -646,7 +646,7 @@ raster2ncdf <- function(rast_in, path_out, name, unit, is_ncdf4 = FALSE, prec = 
   x_def <- c(axis_names[1], "degrees_east")
   y_def <- c(axis_names[2], "degrees_north")
 
-  r_crs <- sf::st_as_text(sf::st_crs(r_template@crs))
+  r_crs <- sf::st_as_text(sf::st_crs(crs(r_template)))
   axis_str <- substr(r_crs,  regexec("AXIS\\[", r_crs)[[1]], nchar(r_crs))
   if(regexec("Latitude", axis_str)[[1]] == -1) {
     # set x, y_def to metric
