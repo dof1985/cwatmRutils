@@ -68,9 +68,9 @@ getInlets <- function (r, network, ldd, plot_ = FALSE) {
   ups_$to_y <- raster::yFromCell(r, ups_$cells)
 
   if(plot_) {
-    plot(r)
-    plot(cwatmRutils::val_to_na(network > 0), col = "black", add =  TRUE)
-    plot(sp::SpatialPoints(ups_[c("to_x", "to_y")]), col = "red", add = TRUE)
+    raster::plot(r)
+    raster::plot(cwatmRutils::val_to_na(network > 0), col = "black", add =  TRUE, legend = FALSE)
+    raster::plot(sp::SpatialPoints(ups_[c("to_x", "to_y")]), col = "red", add = TRUE, legend = FALSE)
   }
   return(ups_)
 }
