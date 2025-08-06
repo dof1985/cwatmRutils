@@ -14,7 +14,7 @@
 #' }
 #' @export
 getUpstream <- function(x) {
-
+  names(x) <- "layer"
   downdir <- data.frame("val" = c(1:4, 6:9),
                         "row" = c(1, 1, 1, 0, 0, -1, -1, -1),
                         "col" = c(-1, 0, 1, - 1, 1, -1, 0, 1))
@@ -56,7 +56,7 @@ getUpstream <- function(x) {
 #' PUT EXAMPLE HERE
 #' }
 #' @export
-getInlets <- function (r, network, ldd, plot_ = TRUE) {
+getInlets <- function (r, network, ldd, plot_ = FALSE) {
   cell_streams <- raster::Which(network == 1, cells = TRUE)
   ups_ <- na.omit(cwatmRutils::getUpstream(ldd))
   ups_ <- ups_[ups_$cells %in% cell_streams, ]
